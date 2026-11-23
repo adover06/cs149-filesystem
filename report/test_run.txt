@@ -1,0 +1,99 @@
+init
+  PASS  checkSizes passes (dir entry 20, union 512)
+  FAIL  free list holds sectors 1..99
+  FAIL  root has 25 free entries, all F
+create / write / read
+[stub] fsCreate('U', "A")
+  FAIL  CREATE U A
+  FAIL  new file has size 0 and link 0
+  FAIL  root free count drops to 24
+[stub] fsOpen('U', "A")
+  FAIL  OPEN U A
+[stub] fsWrite(5 bytes)
+  FAIL  WRITE 5 HELLO
+[stub] fsWrite(6 bytes)
+  FAIL  WRITE 6 ' WORLD' keeps the space
+[stub] fsSeek(0)
+  FAIL  SEEK 0
+[stub] fsRead(100)
+  FAIL  READ 100 returns the 11 bytes written
+  FAIL  size is 11
+  FAIL  one sector used
+[stub] fsClose()
+  FAIL  CLOSE
+read a file that doesn't exist
+[stub] fsOpen('I', "NOPE")
+  PASS  OPEN I NOPE fails
+[stub] fsRead(10)
+  PASS  READ with no open file fails
+duplicate name
+[stub] fsCreate('U', "A")
+[stub] fsCreate('U', "A")
+  PASS  second CREATE U A rejected
+[stub] fsCreate('D', "A")
+  PASS  CREATE D A rejected too
+  FAIL  only one entry used
+delete returns sectors to the free list
+[stub] fsCreate('U', "A")
+[stub] fsOpen('O', "A")
+[stub] fsWrite(1200 bytes)
+[stub] fsClose()
+  FAIL  write 1200 bytes
+  FAIL  1200 bytes uses 3 sectors
+[stub] fsDelete("A")
+  FAIL  DELETE A
+  FAIL  all 3 sectors back in free list
+  FAIL  entry marked F
+write larger than free space / fill the disk
+[stub] fsCreate('U', "A")
+[stub] fsOpen('O', "A")
+[stub] fsWrite(25200 bytes)
+[stub] fsClose()
+  FAIL  A takes 50 sectors
+  FAIL  49 sectors left
+[stub] fsCreate('U', "B")
+[stub] fsOpen('O', "B")
+[stub] fsWrite(25200 bytes)
+[stub] fsClose()
+  FAIL  writing 50 sectors to B only writes the 49 that are free
+  FAIL  B size matches bytes actually written
+  PASS  disk is full
+[stub] fsCreate('D', "X")
+  PASS  CREATE D fails when no sector is free
+[stub] fsCreate('U', "C")
+  FAIL  CREATE U still works (needs no sector)
+[stub] fsOpen('O', "C")
+[stub] fsWrite(1 bytes)
+  PASS  write to full disk writes nothing
+[stub] fsClose()
+[stub] fsDelete("A")
+  FAIL  deleting A frees its 50 sectors
+fragmentation (non-contiguous file)
+[stub] fsCreate('U', "A")
+[stub] fsOpen('O', "A")
+[stub] fsWrite(504 bytes)
+[stub] fsClose()
+[stub] fsCreate('U', "B")
+[stub] fsOpen('O', "B")
+[stub] fsWrite(504 bytes)
+[stub] fsClose()
+[stub] fsOpen('O', "A")
+[stub] fsWrite(504 bytes)
+  FAIL  append 504 more bytes to A
+[stub] fsClose()
+  FAIL  A's two sectors are not next to each other
+  FAIL  back/forward links correct
+[stub] fsOpen('I', "A")
+[stub] fsRead(1008)
+  FAIL  READ follows the link across sectors
+[stub] fsSeek(600)
+  FAIL  SEEK 600 lands at offset 96 of the second sector
+[stub] fsClose()
+[stub] fsDelete("B")
+  FAIL  deleting B (in the middle) frees 1 sector
+[stub] fsOpen('I', "A")
+[stub] fsRead(1008)
+  FAIL  A unchanged after B deleted
+[stub] fsClose()
+
+8 passed, 32 failed
