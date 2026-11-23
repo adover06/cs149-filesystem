@@ -1,7 +1,3 @@
-/*
- * STUB - placeholder for Derek De Luna's commands.c.
- * Only here so main.c and test.c compile. DELETE THIS FILE when commands.c is ready.
- */
 #include <stdio.h>
 #include "filesystem.h"
 

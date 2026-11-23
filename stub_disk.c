@@ -1,7 +1,3 @@
-/*
- * STUB - placeholder for Andrew Porasl's disk.c.
- * Only here so main.c and test.c compile. DELETE THIS FILE when disk.c is ready.
- */
 #include <stdio.h>
 #include "filesystem.h"
 
