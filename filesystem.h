@@ -8,7 +8,7 @@
  *   main.c      (Andrew Dover)  - command loop that calls the functions below
  *   test.c      (Andrew Dover)  - test cases
  *
- * Until disk.c / commands.c exist, stub_disk.c / stub_commands.c stand in.
+ * disk.c is done. Until commands.c exists, stub_commands.c stands in.
  */
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
